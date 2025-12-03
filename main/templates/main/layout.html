@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт-визитка - {{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        nav {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            text-align: center;
+            color: #667;
+        }
+        .project {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Мой первый Django-сайт</h1>
+        <nav>
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'about' %}">Обо мне</a>
+            <a href="{% url 'portfolio' %}">Портфолио</a>
+         </nav>
+    </header>
+    
+    <main>
+        {% block content %}
+        <!-- Содержимое страниц будет здесь -->
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <p>Создано в рамках изучения Django. &copy; 2025</p>
+    </footer>
+</body>
+</html>
