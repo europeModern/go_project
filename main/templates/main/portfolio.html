@@ -6,14 +6,13 @@
 <p>Здесь представлены мои учебные проекты:</p>
 
 {% for project in projects %}
-<div class="project">
-    <h3>{{ project }}</h3>
-    <p>Описание проекта будет добавлено позже.</p>
+<div class="project" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f9f9f9;">
+    <h3>{{ project.title }}</h3>
+    <p><strong>Дата создания:</strong> {{ project.created_at|date:"d.m.Y" }}</p>
+    <p>{{ project.description }}</p>
 </div>
+{% empty %}
+<p>Проектов пока нет. Они скоро появятся!</p>
 {% endfor %}
 
-<div class="project">
-    <h3>Сайт-визитка на Django</h3>
-    <p>Этот проект - моя первая работа с фреймворком Django, включающая создание многостраничного сайта с системой шаблонов и маршрутизацией.</p>
-</div>
 {% endblock %}

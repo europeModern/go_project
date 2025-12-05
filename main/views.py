@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Project
 
 def home(request):
     context = {'title': 'Главная страница'}
@@ -9,7 +10,7 @@ def about(request):
     return render(request, 'main/about.html', context)
 
 def portfolio(request):
-    projects = ["Проект 1", "Проект 2", "Проект 3"]
+    projects = Project.objects.all().order_by('-created_at')
     context = {
         'title': 'Портфолио', 
         'projects': projects
