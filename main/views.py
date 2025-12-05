@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Project
+from .models import Lecture, Project
 
 def home(request):
     context = {'title': 'Главная страница'}
@@ -34,3 +34,11 @@ def contacts(request):
     else:
         context = {'title': 'Контакты'}
     return render(request, 'main/contacts.html', context)
+
+def lectures(request):
+    lectures_list = Lecture.objects.all().order_by('-created_at')
+    context = {
+        'title': 'Лекции', 
+        'lectures': lectures_list
+    }
+    return render(request, 'main/lectures.html', context)

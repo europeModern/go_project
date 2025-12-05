@@ -1,0 +1,18 @@
+{% extends 'main/layout.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+
+<p>Здесь представлены пройденные лекции:</p>
+
+{% for lecture in lectures %}
+<div class="lecture" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f8ff;">
+    <h3>{{ lecture.title }}</h3>
+    <p><strong>Дата добавления:</strong> {{ lecture.created_at|date:"d.m.Y" }}</p>
+    <p>{{ lecture.description }}</p>
+</div>
+{% empty %}
+<p>Лекций пока нет. Они скоро появятся!</p>
+{% endfor %}
+
+{% endblock %}

@@ -11,3 +11,15 @@ class Project(models.Model):
     class Meta:
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
+
+class Lecture(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Название лекции')
+    description = models.TextField(verbose_name='Краткое описание')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = 'Лекция'
+        verbose_name_plural = 'Лекции'
