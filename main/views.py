@@ -50,3 +50,11 @@ def project_detail(request, project_id):
         'project': project
     }
     return render(request, 'main/project_detail.html', context)
+
+def lecture_detail(request, lecture_id):
+    lecture = get_object_or_404(Lecture, id=lecture_id)
+    context = {
+        'title': lecture.title,
+        'lecture': lecture
+    }
+    return render(request, 'main/lecture_detail.html', context)

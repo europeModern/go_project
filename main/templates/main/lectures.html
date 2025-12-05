@@ -3,13 +3,18 @@
 {% block content %}
 <h2>{{ title }}</h2>
 
-<p>Здесь представлены пройденные лекции:</p>
+<p>Здесь представлены пройденные лекции. Нажмите на название для просмотра деталей.</p>
 
 {% for lecture in lectures %}
 <div class="lecture" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f8ff;">
-    <h3>{{ lecture.title }}</h3>
+    <h3>
+        <a href="{% url 'lecture_detail' lecture.id %}" style="text-decoration: none; color: #007bff;">
+            {{ lecture.title }}
+        </a>
+    </h3>
     <p><strong>Дата добавления:</strong> {{ lecture.created_at|date:"d.m.Y" }}</p>
-    <p>{{ lecture.description }}</p>
+    <p>{{ lecture.description|truncatewords:30 }}</p>
+    <a href="{% url 'lecture_detail' lecture.id %}" style="display: inline-block; margin-top: 10px; color: #28a745;">Подробнее →</a>
 </div>
 {% empty %}
 <p>Лекций пока нет. Они скоро появятся!</p>
