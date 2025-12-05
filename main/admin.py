@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Project, Lecture, Feedback, Subscriber,
+    Category, Project, Lecture, Feedback, Subscriber,
     Manufacturer, Product
 )
 
@@ -45,18 +45,19 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'name', 
         'manufacturer', 
+        'category',
         'price', 
         'stock_quantity', 
         'is_available', 
         'created_at'
     )
-    list_filter = ('manufacturer', 'is_available', 'created_at')
-    search_fields = ('name', 'description', 'manufacturer__name')
+    list_filter = ('manufacturer', 'category', 'is_available', 'created_at')
+    search_fields = ('name', 'description', 'manufacturer__name', 'category__name')
     list_editable = ('price', 'stock_quantity', 'is_available')
     readonly_fields = ('created_at',)
     fieldsets = (
         ('Основная информация', {
-            'fields': ('name', 'description', 'manufacturer')
+            'fields': ('name', 'description', 'manufacturer', 'category')
         }),
         ('Цены и наличие', {
             'fields': ('price', 'stock_quantity', 'is_available')
@@ -76,3 +77,18 @@ class ProductAdmin(admin.ModelAdmin):
         updated = queryset.update(is_available=False)
         self.message_user(request, f'{updated} товаров сняты с продажи')
     make_unavailable.short_description = "Снять с продажи"
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'product_count', 'description_short')
+    search_fields = ('name', 'description')
+    
+    def product_count(self, obj):
+        return obj.product_set.count()
+    product_count.short_description = 'Количество товаров'
+    
+    def description_short(self, obj):
+        if len(obj.description) > 50:
+            return obj.description[:50] + '...'
+        return obj.description
+    description_short.short_description = 'Описание (кратко)'

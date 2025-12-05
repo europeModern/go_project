@@ -76,6 +76,17 @@ class Manufacturer(models.Model):
     def __str__(self):
         return self.name
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название категории')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+    
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     """
     Основная модель продукции
@@ -86,6 +97,13 @@ class Product(models.Model):
         Manufacturer, 
         on_delete=models.PROTECT, 
         verbose_name='Производитель'
+    )
+    category = models.ForeignKey(
+        Category, 
+        on_delete=models.PROTECT, 
+        verbose_name='Категория',
+        null=True,
+        blank=True
     )
     price = models.DecimalField(
         max_digits=10, 
