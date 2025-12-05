@@ -49,12 +49,13 @@
             <a href="{% url 'home' %}">Главная</a>
             <a href="{% url 'about' %}">Обо мне</a>
             <a href="{% url 'portfolio' %}">Портфолио</a>
+            <a href="{% url 'contacts' %}">Контакты</a>
          </nav>
     </header>
     
     <main>
         {% block content %}
-        <!-- Содержимое страниц будет здесь -->
+
         {% endblock %}
     </main>
     

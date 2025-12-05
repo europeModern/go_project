@@ -15,3 +15,21 @@ def portfolio(request):
         'projects': projects
     }
     return render(request, 'main/portfolio.html', context)
+
+
+def contacts(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        
+        context = {
+            'title': 'Контакты',
+            'success_message': f'Спасибо, {name}! Ваше сообщение отправлено.',
+            'name': name,
+            'email': email,
+            'message': message
+        }
+    else:
+        context = {'title': 'Контакты'}
+    return render(request, 'main/contacts.html', context)
