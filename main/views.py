@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import Lecture, Project
 
 def home(request):
@@ -42,3 +42,11 @@ def lectures(request):
         'lectures': lectures_list
     }
     return render(request, 'main/lectures.html', context)
+
+def project_detail(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    context = {
+        'title': project.title,
+        'project': project
+    }
+    return render(request, 'main/project_detail.html', context)
