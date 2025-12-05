@@ -52,3 +52,67 @@ class Subscriber(models.Model):
         verbose_name = 'Подписчик'
         verbose_name_plural = 'Подписчики'
         ordering = ['-created_at']
+
+
+class Manufacturer(models.Model):
+    """
+    Модель производителей оборудования
+    """
+    name = models.CharField(max_length=100, verbose_name='Название производителя')
+    country = models.CharField(max_length=50, verbose_name='Страна')
+    website = models.URLField(blank=True, verbose_name='Веб-сайт')
+    founded_year = models.PositiveIntegerField(
+        null=True, 
+        blank=True, 
+        verbose_name='Год основания'
+    )
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+    
+    class Meta:
+        verbose_name = 'Производитель'
+        verbose_name_plural = 'Производители'
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    """
+    Основная модель продукции
+    """
+    name = models.CharField(max_length=200, verbose_name='Название товара')
+    description = models.TextField(verbose_name='Описание')
+    manufacturer = models.ForeignKey(
+        Manufacturer, 
+        on_delete=models.PROTECT, 
+        verbose_name='Производитель'
+    )
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        verbose_name='Цена'
+    )
+    stock_quantity = models.PositiveIntegerField(
+        default=0, 
+        verbose_name='Количество на складе'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True, 
+        verbose_name='Дата создания'
+    )
+    is_available = models.BooleanField(
+        default=True, 
+        verbose_name='Доступен для продажи'
+    )
+    warranty_months = models.PositiveSmallIntegerField(
+        default=12, 
+        verbose_name='Гарантия (мес.)'
+    )
+    
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.name} ({self.manufacturer.name})"

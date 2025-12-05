@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Feedback, Project, Lecture, Subscriber
+from .models import (
+    Project, Lecture, Feedback, Subscriber,
+    Manufacturer, Product
+)
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -26,3 +29,50 @@ class SubscriberAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'created_at')
     search_fields = ('email',)
     list_editable = ('is_active',)
+
+@admin.register(Manufacturer)
+class ManufacturerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country', 'founded_year', 'is_active', 'product_count')
+    list_filter = ('country', 'is_active')
+    search_fields = ('name', 'country')
+    
+    def product_count(self, obj):
+        return obj.product_set.count()
+    product_count.short_description = 'Количество товаров'
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 
+        'manufacturer', 
+        'price', 
+        'stock_quantity', 
+        'is_available', 
+        'created_at'
+    )
+    list_filter = ('manufacturer', 'is_available', 'created_at')
+    search_fields = ('name', 'description', 'manufacturer__name')
+    list_editable = ('price', 'stock_quantity', 'is_available')
+    readonly_fields = ('created_at',)
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'description', 'manufacturer')
+        }),
+        ('Цены и наличие', {
+            'fields': ('price', 'stock_quantity', 'is_available')
+        }),
+        ('Дополнительная информация', {
+            'fields': ('warranty_months', 'created_at')
+        }),
+    )
+    actions = ['make_available', 'make_unavailable']
+    
+    def make_available(self, request, queryset):
+        updated = queryset.update(is_available=True)
+        self.message_user(request, f'{updated} товаров теперь доступны для продажи')
+    make_available.short_description = "Сделать доступными для продажи"
+    
+    def make_unavailable(self, request, queryset):
+        updated = queryset.update(is_available=False)
+        self.message_user(request, f'{updated} товаров сняты с продажи')
+    make_unavailable.short_description = "Снять с продажи"
