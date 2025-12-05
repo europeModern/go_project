@@ -1,5 +1,6 @@
 from django import forms
 from .models import Feedback
+from .models import Subscriber
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
@@ -31,4 +32,20 @@ class FeedbackForm(forms.ModelForm):
             'email': 'Email адрес',
             'subject': 'Тема сообщения', 
             'message': 'Сообщение'
+        }
+
+class SubscribeForm(forms.ModelForm):
+    class Meta:
+        model = Subscriber
+        fields = ['email']
+        
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите ваш email'
+            }),
+        }
+        
+        labels = {
+            'email': 'Email для подписки'
         }

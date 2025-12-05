@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Lecture, Project, Feedback
-from .forms import FeedbackForm 
+from .models import Lecture, Project, Feedback, Subscriber
+from .forms import FeedbackForm, SubscribeForm 
 
 def home(request):
     context = {'title': 'Главная страница'}
@@ -70,3 +70,37 @@ def feedback_list(request):
         'feedbacks': feedbacks
     }
     return render(request, 'main/feedback_list.html', context)
+
+def subscribe(request):
+    if request.method == 'POST':
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Вы успешно подписались на новости!')
+                return redirect('subscribe_success')
+            except:
+                messages.error(request, 'Этот email уже подписан на новости.')
+        else:
+            messages.error(request, 'Пожалуйста, введите корректный email.')
+    else:
+        form = SubscribeForm()
+    
+    context = {'title': 'Подписаться на новости', 'form': form}
+    return render(request, 'main/subscribe.html', context)
+
+def subscribe_success(request):
+    context = {'title': 'Подписка успешна'}
+    return render(request, 'main/subscribe_success.html', context)
+
+def unsubscribe(request, email):
+    try:
+        subscriber = Subscriber.objects.get(email=email)
+        subscriber.is_active = False
+        subscriber.save()
+        message = f'Email {email} отписан от рассылки.'
+    except Subscriber.DoesNotExist:
+        message = 'Такой email не найден в списке подписчиков.'
+    
+    context = {'title': 'Отписка от рассылки', 'message': message}
+    return render(request, 'main/unsubscribe.html', context)

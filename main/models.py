@@ -39,3 +39,16 @@ class Feedback(models.Model):
         verbose_name = 'Обратная связь'
         verbose_name_plural = 'Обратные связи'
         ordering = ['-created_at']
+
+class Subscriber(models.Model):
+    email = models.EmailField(verbose_name='Email', unique=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата подписки')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+    
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        verbose_name = 'Подписчик'
+        verbose_name_plural = 'Подписчики'
+        ordering = ['-created_at']

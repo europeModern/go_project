@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Feedback, Project, Lecture
+from .models import Feedback, Project, Lecture, Subscriber
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -19,3 +19,10 @@ class FeedbackAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'subject', 'message')
     list_editable = ('is_processed',)
     readonly_fields = ('created_at',)
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = ('email', 'created_at', 'is_active')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('email',)
+    list_editable = ('is_active',)
