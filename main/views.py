@@ -1,5 +1,7 @@
-from django.shortcuts import get_object_or_404, render
-from .models import Lecture, Project
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Lecture, Project, Feedback
+from .forms import FeedbackForm 
 
 def home(request):
     context = {'title': 'Главная страница'}
@@ -20,19 +22,18 @@ def portfolio(request):
 
 def contacts(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message = request.POST.get('message')
-        
-        context = {
-            'title': 'Контакты',
-            'success_message': f'Спасибо, {name}! Ваше сообщение отправлено.',
-            'name': name,
-            'email': email,
-            'message': message
-        }
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Ваше сообщение успешно отправлено! Мы ответим вам в ближайшее время.')
+            return redirect('contacts')
     else:
-        context = {'title': 'Контакты'}
+        form = FeedbackForm()
+    
+    context = {
+        'title': 'Контакты',
+        'form': form
+    }
     return render(request, 'main/contacts.html', context)
 
 def lectures(request):
@@ -58,3 +59,14 @@ def lecture_detail(request, lecture_id):
         'lecture': lecture
     }
     return render(request, 'main/lecture_detail.html', context)
+
+def feedback_list(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    
+    feedbacks = Feedback.objects.all()
+    context = {
+        'title': 'Сообщения обратной связи',
+        'feedbacks': feedbacks
+    }
+    return render(request, 'main/feedback_list.html', context)
